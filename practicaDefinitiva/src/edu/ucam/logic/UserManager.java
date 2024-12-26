@@ -1,6 +1,6 @@
 package edu.ucam.logic;
 
-import edu.ucam.logic.persistencia.FileManager;
+import edu.ucam.logic.persistance.FileManager;
 import edu.ucam.models.User;
 import edu.ucam.utils.Log;
 
@@ -35,13 +35,38 @@ public class UserManager {
         return instance;
     }
 
-    private void addUser(User user) {
-        Log.getInstance().info("Añadiendo usuario: " + user);
+    public void addUser(User user) {
+        Log.getInstance().debug("Añadiendo usuario: " + user + "...");
+        if(searchUser(user.getName()) != null) {
+            Log.getInstance().error("El usuario " + user.getName() + " ya existe.");
+            return;
+        }
         users.put(user.getName(), user);
+        Log.getInstance().info("Usuario añadido correctamente: " + user);
         saveUsers();
     }
 
-    private void saveUsers() {
+    public void removeUser(String name) {
+        Log.getInstance().debug("Eliminando usuario: " + name + "...");
+        User user = searchUser(name);
+        if(user != null) {
+            users.remove(name);
+            Log.getInstance().info("Usuario eliminado correctamente: " + user);
+            saveUsers();
+        } else {
+            Log.getInstance().error("El usuario " + name + " no existe.");
+        }
+    }
+
+    public String listUsers() {
+        StringBuilder sb = new StringBuilder();
+        for (User user : users.values()) {
+            sb.append(user).append("\n");
+        }
+        return sb.toString();
+    }
+
+    public void saveUsers() {
         Log.getInstance().debug("Guardando usuarios en " + USER_FILE + "...");
         FileManager.save(USER_FILE, users);
     }

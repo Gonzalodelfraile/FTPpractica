@@ -1,7 +1,7 @@
 package edu.ucam.logic;
 
 import edu.ucam.models.User;
-import edu.ucam.models.menus.AdminMenu;
+import edu.ucam.logic.menus.AdminMenu;
 import edu.ucam.ui.LoginUI;
 import edu.ucam.utils.Log;
 
@@ -20,11 +20,11 @@ public class LoginManager {
         if("admin".equals(usuario.getRole())) {
             // Menu de administrador
             Log.getInstance().debug("Iniciando menú de administrador...");
-            new AdminMenu(usuario).showMenu();
-
+            AdminMenu adminMenu = new AdminMenu(usuario);
+            adminMenu.displayMenu();
         } else if("user".equals(usuario.getRole())) {
             // Menu de usuario
-            Log.getInstance().info("Iniciando menú de usuario...");
+            Log.getInstance().debug("Iniciando menú de usuario...");
         } else {
             Log.getInstance().error("Rol de usuario no reconocido: " + usuario.getRole());
         }

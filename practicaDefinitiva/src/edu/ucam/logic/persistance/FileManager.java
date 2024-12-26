@@ -1,4 +1,4 @@
-package edu.ucam.logic.persistencia;
+package edu.ucam.logic.persistance;
 
 import edu.ucam.utils.Log;
 
