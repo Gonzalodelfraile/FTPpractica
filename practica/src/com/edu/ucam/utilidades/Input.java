@@ -18,6 +18,18 @@ public class Input {
         return null;
     }
 
+    public static String leerNickname() {
+        System.out.println("Introduce un nickname:");
+        String nickname = scanner.nextLine();
+        return Validador.esNickname(nickname) ? nickname : null;
+    }
+
+    public static String leerPassword() {
+        System.out.println("Introduce un password:");
+        String password = scanner.nextLine();
+        return Validador.esPassword(password) ? password : null;
+    }
+
     public static String leerIP() {
     System.out.println("Introduce una IP:");
     String ip = scanner.nextLine();
@@ -31,5 +43,10 @@ public class Input {
             return puerto;
         }
         return -1;
+    }
+
+    public static String leerCadena(String s) {
+        System.out.println(s);
+        return leerCadena();
     }
 }

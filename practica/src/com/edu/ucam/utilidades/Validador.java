@@ -21,7 +21,7 @@ public class Validador {
     }
 
     public static boolean esIP(String ip) {
-        return ip.matches("^(?:[0-9]{1,3}\\.){3}[0-9]{1,3}$");
+        return ip.matches("^(?:[0-9]{1,3}\\.){3}[0-9]{1,3}$")||ip.equalsIgnoreCase("localhost");
     }
 
     public static boolean esPuerto(String puerto) {

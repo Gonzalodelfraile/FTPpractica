@@ -1,23 +1,26 @@
 package com.edu.ucam.persistencia;
 
-public class ConfiguracionFTP {
+public class ConfiguracionFTP implements java.io.Serializable {
 
-    private String Nombre;
+    private String nombre;
     private String servidor;
     private int puertoTransferencia;
     private int puertoConexion;
     private String nickname;
+    private String password;
 
-    public ConfiguracionFTP(String Nombre, String servidor, String nickname) {
-        this.Nombre = Nombre;
+
+    public ConfiguracionFTP(String Nombre, String servidor, String nickname, String password) {
+        this.nombre = Nombre;
         this.servidor = servidor;
         this.puertoConexion = 21;
         this.puertoTransferencia = 20;
         this.nickname = nickname;
+        this.password = password;
     }
 
     public String getNombre() {
-        return Nombre;
+        return nombre;
     }
 
     public String getServidor() {
@@ -35,11 +38,27 @@ public class ConfiguracionFTP {
     @Override
     public String toString() {
         return "ConfiguracionFTP{" +
-                "Nombre='" + Nombre + '\'' +
+                "Nombre='" + nombre + '\'' +
                 ", servidor='" + servidor + '\'' +
-                ", puerto=" + puertoTransferencia +
+                ", puertoTransferencia=" + puertoTransferencia +
+                ", puertoConexion=" + puertoConexion +
                 ", nickname='" + nickname + '\'' +
+                ", password='" + password + '\'' +
                 '}';
+
     }
 
+
+    public int getPuertoConexion() {
+        return puertoConexion;
+
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
 }
