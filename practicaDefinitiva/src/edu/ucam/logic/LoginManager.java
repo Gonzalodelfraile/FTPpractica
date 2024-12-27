@@ -34,7 +34,7 @@ public class LoginManager {
             new AdminMenu(user).displayMenu();
         } else {
             Log.getInstance().debug("Iniciando menú de usuario...");
-            new UserMenu().displayMenu();
+            new UserMenu(user).displayMenu();
         }
     }
 

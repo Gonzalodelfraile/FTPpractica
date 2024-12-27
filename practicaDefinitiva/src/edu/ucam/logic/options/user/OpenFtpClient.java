@@ -1,21 +1,21 @@
 package edu.ucam.logic.options.user;
 
-import edu.ucam.logic.menus.FtpSettingsMenu;
+import edu.ucam.logic.menus.FtpClientMenu;
 import edu.ucam.models.Option;
 import edu.ucam.models.User;
 import edu.ucam.utils.Log;
 
-public class OpenFTPSettings implements Option {
+public class OpenFtpClient implements Option {
     private User user;
 
-    public OpenFTPSettings(User user) {
+    public OpenFtpClient(User user) {
         this.user = user;
     }
 
     @Override
     public void execute() {
-        Log.getInstance().debug("Abriendo settings de FTP...");
-        new FtpSettingsMenu(user).displayMenu();
+        Log.getInstance().debug("Abriendo cliente FTP...");
+        new FtpClientMenu(user).displayMenu();
     }
 
     @Override
@@ -25,6 +25,6 @@ public class OpenFTPSettings implements Option {
 
     @Override
     public String toString() {
-        return "Configuración FTP";
+        return "Abrir cliente FTP";
     }
 }

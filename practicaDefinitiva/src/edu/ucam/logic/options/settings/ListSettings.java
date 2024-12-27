@@ -1,23 +1,30 @@
 package edu.ucam.logic.options.settings;
 
 import edu.ucam.models.Option;
+import edu.ucam.models.User;
+import edu.ucam.utils.Log;
 
 public class ListSettings implements Option {
+    private User user;
+
+    public ListSettings(User user) {
+        this.user = user;
+    }
     @Override
     public void execute() {
-        // TODO Auto-generated method stub
+        Log.getInstance().debug("Listando configuraciones...");
+        System.out.println(user.listConfigs());
 
     }
 
     @Override
     public boolean isMenuDisplayed() {
-        // TODO Auto-generated method stub
-        return false;
+        return true;
     }
 
     @Override
     public String toString() {
         // TODO Auto-generated method stub
-        return null;
+        return "Listar configuraciones";
     }
 }

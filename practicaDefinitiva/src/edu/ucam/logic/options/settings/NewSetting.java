@@ -2,6 +2,7 @@ package edu.ucam.logic.options.settings;
 
 import edu.ucam.models.FtpConfig;
 import edu.ucam.models.Option;
+import edu.ucam.models.User;
 import edu.ucam.utils.Log;
 
 import java.io.BufferedReader;
@@ -13,17 +14,23 @@ import java.util.Scanner;
 
 public class NewSetting implements Option {
 
+    private User user;
+
+    public NewSetting(User user) {
+        this.user = user;
+    }
+
     @Override
     public void execute() {
         Log.getInstance().debug("Creando nueva configuración...");
         FtpConfig ftpConfig = ftpDataInput();
 
         if (testFtpConnection(ftpConfig)) {
-            Log.getInstance().info("Conexión exitosa. Configuración válida.");
+            Log.getInstance().info("Se ha establecido la conexión.");
             // TODO la configuración a la lista del usuario
-            // Ejemplo: user.addConfig(ftpConfig);
+            user.addConfig(ftpConfig);
         } else {
-            Log.getInstance().error("Error de conexión. Configuración no válida.");
+            Log.getInstance().error("Error de conexión.");
         }
     }
 

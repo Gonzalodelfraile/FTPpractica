@@ -105,6 +105,22 @@ public class User implements Serializable {
         this.configs = configs;
     }
 
+    public String listConfigs() {
+        if (configs.isEmpty()) {
+            return "El usuario " + name + " no tiene configuraciones.";
+        }
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("Configuraciones de ").append(name).append(":").append("\n");
+
+        for (int i = 0; i < configs.size(); i++) {
+            FtpConfig config = configs.get(i);
+            sb.append(i + 1).append(". ").append(config.getName()).append("\n");
+        }
+        return sb.toString();
+    }
+
+
     @Override
     public String toString() {
         return "User{" +
