@@ -1,4 +1,4 @@
-package edu.ucam.logic.options;
+package edu.ucam.logic.options.admin;
 
 import edu.ucam.logic.UserManager;
 import edu.ucam.models.Option;
@@ -26,13 +26,14 @@ public class NewUser implements Option {
         String name = scanner.nextLine();
         System.out.println("Contraseña: ");
         String password = scanner.nextLine();
-        System.out.println("Rol: ");
+        System.out.println("¿Es administrador? (si/no): ");
         String role = scanner.nextLine();
-        return new User(name, password, role);
+        boolean isAdmin = role.equalsIgnoreCase("si");
+        return new User(name, password, isAdmin);
     }
 
     @Override
     public String toString() {
-        return "New User";
+        return "Nuevo usuario";
     }
 }

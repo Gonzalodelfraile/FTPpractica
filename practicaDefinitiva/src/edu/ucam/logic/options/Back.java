@@ -1,19 +1,13 @@
 package edu.ucam.logic.options;
 
-import edu.ucam.logic.UserManager;
-import edu.ucam.models.Menu;
 import edu.ucam.models.Option;
 import edu.ucam.utils.Log;
 
-public class LogOut implements Option {
-
+public class Back implements Option {
     @Override
     public void execute() {
-        Log.getInstance().debug("Cerrando sesión...");
-        UserManager.getInstance().saveUsers();
-        Menu.closeSession();
-
-
+        Log.getInstance().debug("Volviendo al menú anterior...");
+        //isMenuDisplayed() es false por lo que volverá al menú anterior
     }
 
     @Override
@@ -23,6 +17,6 @@ public class LogOut implements Option {
 
     @Override
     public String toString() {
-        return "Cerrar sesión";
+        return "Volver";
     }
 }

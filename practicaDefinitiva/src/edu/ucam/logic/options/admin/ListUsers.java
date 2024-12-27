@@ -1,4 +1,4 @@
-package edu.ucam.logic.options;
+package edu.ucam.logic.options.admin;
 
 import edu.ucam.logic.UserManager;
 import edu.ucam.models.Option;
@@ -19,6 +19,6 @@ public class ListUsers implements Option {
 
     @Override
     public String toString() {
-        return "List Users";
+        return "Listar usuarios";
     }
 }

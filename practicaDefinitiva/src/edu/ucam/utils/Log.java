@@ -15,7 +15,7 @@ public class Log {
         try{
             FileHandler fileHandler = new FileHandler("ftp.log",true);
             fileHandler.setFormatter(new SimpleFormatter());
-            fileHandler.setLevel(Level.ALL); // Loguea todo a archivo
+            fileHandler.setLevel(Level.ALL); // Loguea todas las entradas
             logger.addHandler(fileHandler);
 
             ConsoleHandler consoleHandler = new ConsoleHandler();
@@ -23,7 +23,7 @@ public class Log {
             consoleHandler.setLevel(Level.INFO); // Loguea solo los aciertos y errores a consola
             logger.addHandler(consoleHandler);
 
-            logger.setLevel(Level.ALL); // Loguea todo
+            logger.setLevel(Level.ALL); // Loguea todas las entradas
         } catch (IOException e) {
             System.err.println("Error al crear el archivo de log");
         }

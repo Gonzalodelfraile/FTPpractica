@@ -2,17 +2,17 @@ package edu.ucam.models;
 
 import java.io.Serializable;
 
-public class FTPConfig implements Serializable {
+public class FtpConfig implements Serializable {
     private String name;
     private String serverIP;
     private int port;
     private String user;
     private String password;
 
-    public FTPConfig(String name, String serverIP, int port, String user, String password) {
+    public FtpConfig(String name, String serverIP, String user, String password) {
         this.name = name;
         this.serverIP = serverIP;
-        this.port = port;
+        this.port = 21;
         this.user = user;
         this.password = password;
     }

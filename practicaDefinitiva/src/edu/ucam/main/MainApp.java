@@ -8,7 +8,9 @@ public class MainApp {
         Log.getInstance().debug("Iniciando aplicación...");
 
         // Iniciar sesión
-        LoginManager.login();
+        LoginManager.start();
+
+
 
     }
 

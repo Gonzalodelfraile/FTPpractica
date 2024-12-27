@@ -22,8 +22,8 @@ public class UserManager {
             Log.getInstance().error("No se han podido cargar los usuarios.Creando usuarios por defecto...");
             // Crear usuarios por defecto
             users = new HashMap<>();
-            addUser(new User("admin", "admin", "admin"));
-            addUser(new User("user", "user", "user"));
+            addUser(new User("admin", "admin", true));
+            addUser(new User("user", "user", false));
         }
 
     }
@@ -40,14 +40,21 @@ public class UserManager {
         if(searchUser(user.getName()) != null) {
             Log.getInstance().error("El usuario " + user.getName() + " ya existe.");
             return;
+        } else if (user.getName().isEmpty() || user.getPassword().isEmpty()) {
+            Log.getInstance().error("El usuario no puede tener campos vacíos.");
+            return;
         }
         users.put(user.getName(), user);
         Log.getInstance().info("Usuario añadido correctamente: " + user);
         saveUsers();
     }
 
-    public void removeUser(String name) {
+    public void removeUser(String name, User activeUser) {
         Log.getInstance().debug("Eliminando usuario: " + name + "...");
+        if (activeUser.getName().equals(name)) {
+            Log.getInstance().error("No puedes eliminarte a ti mismo.");
+            return;
+        }
         User user = searchUser(name);
         if(user != null) {
             users.remove(name);

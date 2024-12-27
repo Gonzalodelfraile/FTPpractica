@@ -12,6 +12,8 @@ public class Menu {
     protected Scanner scanner = new Scanner(System.in);
     private String title;
 
+    protected static boolean isSessionActive = true;
+
     public Menu(String title) {
         this.title = title;
     }
@@ -19,7 +21,7 @@ public class Menu {
     // mostrar el menú
     public void displayMenu(){
         boolean menuDisplayed = true;
-        while (menuDisplayed) {
+        while (isSessionActive && menuDisplayed) {
 
             System.out.println("\n---" + title + "---");
             options.forEach((key, option) -> System.out.println(key + ". " + option));
@@ -46,5 +48,17 @@ public class Menu {
             return true;
         }
     }
+
+    public static void resetSession() {
+        isSessionActive = true;
+    }
+    public static void closeSession() {
+        isSessionActive = false;
+    }
+
+    public static boolean isSessionActive() {
+        return isSessionActive;
+    }
+
 }
 

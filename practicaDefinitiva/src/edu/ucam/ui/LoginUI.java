@@ -13,22 +13,16 @@ public class LoginUI {
     public static User start() {
         Log.getInstance().debug("Iniciando interfaz de login...");
         Scanner scanner = new Scanner(System.in);
+
         System.out.println("Introduce un nickname:");
         String nickname = scanner.nextLine();
 
-
         System.out.println("Introduce un password:");
         //String password = new String(System.console().readPassword()); este no va
-        Console console = System.console();
         //leemos el password de forma segura (si se puede)
         String password;
-        if(console == null){
-            Log.getInstance().error("No se puede leer el password de forma segura");
-            password = scanner.nextLine();
-        } else {
-            password = new String(console.readPassword());
-        }
-        //String password
+        Log.getInstance().debug("No se puede leer el password de forma segura...");
+        password = scanner.nextLine();
         return new User(nickname, password);
     }
 }

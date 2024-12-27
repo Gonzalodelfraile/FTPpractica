@@ -10,24 +10,24 @@ public class User implements Serializable {
 
     private String name;
     private String password;
-    private String role;
-    private FTPConfig activeConfig;
-    private List<FTPConfig> configs;
+    private boolean isAdmin;  // Cambio de role a booleano isAdmin
+    private FtpConfig activeConfig;
+    private List<FtpConfig> configs;
 
     public User(String name, String password) {
         this.name = name;
         this.password = password;
     }
 
-    public User(String name, String password, String role) {
+    public User(String name, String password, boolean isAdmin) {
         this.name = name;
         this.password = password;
-        this.role = role;
+        this.isAdmin = isAdmin;
         this.configs = new ArrayList<>();
     }
 
-    public FTPConfig searchConfig(String name) {
-        for (FTPConfig config : configs) {
+    public FtpConfig searchConfig(String name) {
+        for (FtpConfig config : configs) {
             if (config.getName().equals(name)) {
                 return config;
             }
@@ -35,8 +35,8 @@ public class User implements Serializable {
         return null;
     }
 
-    public void addConfig(FTPConfig config) {
-        if(searchConfig(config.getName()) == null) {
+    public void addConfig(FtpConfig config) {
+        if (searchConfig(config.getName()) == null) {
             Log.getInstance().info("Añadiendo configuración: " + config + " al usuario " + name);
             configs.add(config);
         } else {
@@ -45,8 +45,8 @@ public class User implements Serializable {
     }
 
     public void removeConfig(String name) {
-        FTPConfig config = searchConfig(name);
-        if(config != null) {
+        FtpConfig config = searchConfig(name);
+        if (config != null) {
             Log.getInstance().info("Eliminando configuración: " + config + " del usuario " + name);
             configs.remove(config);
         } else {
@@ -55,8 +55,8 @@ public class User implements Serializable {
     }
 
     public void setActiveConfig(String name) {
-        FTPConfig config = searchConfig(name);
-        if(config != null) {
+        FtpConfig config = searchConfig(name);
+        if (config != null) {
             Log.getInstance().info("Configuración activa para el usuario " + this.name + ": " + config);
             activeConfig = config;
         } else {
@@ -80,27 +80,28 @@ public class User implements Serializable {
         this.password = password;
     }
 
-    public String getRole() {
-        return role;
+    // Se cambió de getRole a isAdmin para reflejar el cambio a booleano
+    public boolean isAdmin() {
+        return isAdmin;
     }
 
-    public void setRole(String role) {
-        this.role = role;
+    public void setAdmin(boolean isAdmin) {
+        this.isAdmin = isAdmin;
     }
 
-    public FTPConfig getActiveConfig() {
+    public FtpConfig getActiveConfig() {
         return activeConfig;
     }
 
-    public void setActiveConfig(FTPConfig activeConfig) {
+    public void setActiveConfig(FtpConfig activeConfig) {
         this.activeConfig = activeConfig;
     }
 
-    public List<FTPConfig> getConfigs() {
+    public List<FtpConfig> getConfigs() {
         return new ArrayList<>(configs); //devuelvo una copia de la lista
     }
 
-    public void setConfigs(List<FTPConfig> configs) {
+    public void setConfigs(List<FtpConfig> configs) {
         this.configs = configs;
     }
 
@@ -108,7 +109,7 @@ public class User implements Serializable {
     public String toString() {
         return "User{" +
                 "name='" + name + '\'' +
-                ", role='" + role + '\'' +
+                ", isAdmin=" + isAdmin +  // Se imprime isAdmin en lugar de role
                 ", activeConfig=" + activeConfig +
                 ", configs=" + configs +
                 '}';
