@@ -9,10 +9,4 @@ public class MainApp {
         // Iniciar sesión
         LoginManager.start();
     }
-
-
-
-
-
-
 }

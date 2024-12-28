@@ -7,15 +7,27 @@ import edu.ucam.logic.menus.AdminMenu;
 import edu.ucam.ui.LoginUI;
 import edu.ucam.utils.Log;
 
+import java.util.Scanner;
+
 public class LoginManager {
 
     public static void start() {
-        while (true) { // Reiniciar login mientras la aplicación esté activa
-            Menu.resetSession(); // Reiniciar el estado global de sesión
-            login(); // Lógica de inicio de sesión
+        boolean logAgain = true;
+        while (logAgain) {
+            Menu.resetSession();
+            login();
+            logAgain= logAgain();
         }
+    }
+
+    private static boolean logAgain() {
+        System.out.println("¿Desea volver a iniciar sesión? (si/no)");
+        Scanner scanner = new Scanner(System.in);
+        String response = scanner.nextLine();
+        return response.equalsIgnoreCase("si");
 
     }
+
     public static void login() {
         User usuario;
         do {
@@ -28,7 +40,7 @@ public class LoginManager {
     private static void gestionarMenu(User user) {
         Log.getInstance().debug("Filtrando usuario...");
 
-        // Usamos el valor booleano isAdmin() para determinar el rol
+        // Usamos el valor isAdmin() para determinar el rol
         if (user.isAdmin()) {
             Log.getInstance().debug("Iniciando menú de administrador...");
             new AdminMenu(user).displayMenu();

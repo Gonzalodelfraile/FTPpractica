@@ -1,10 +1,9 @@
 package edu.ucam.logic.menus;
 
 import edu.ucam.logic.ftp.FtpClient;
-import edu.ucam.logic.options.Back;
 import edu.ucam.logic.options.Exit;
 import edu.ucam.logic.options.LogOut;
-import edu.ucam.logic.options.ftp.ListFiles;
+import edu.ucam.logic.options.ftp.*;
 import edu.ucam.models.Menu;
 import edu.ucam.models.User;
 import edu.ucam.utils.Log;
@@ -14,7 +13,6 @@ public class FtpClientMenu extends Menu {
 
     public FtpClientMenu(User user) {
         super("Cliente FTP:");
-
         startFtpClient(user);
 
         addOption(1, new LogOut());
@@ -22,11 +20,13 @@ public class FtpClientMenu extends Menu {
 
         if (ftpClient != null) {
             addOption(3, new ListFiles(ftpClient));
-            //addOption(4, new UploadFile(ftpClient));
-//            addOption(5, new DownloadFile(ftpClient));
-//            addOption(6, new CreateFolder(ftpClient));
-//            addOption(7, new DeleteFolder(ftpClient));
-//            addOption(8, new RenameFile(ftpClient));
+            addOption(4, new UploadFile(ftpClient));
+            addOption(5, new showCurrentDirectory(ftpClient));
+            addOption(6, new ChangeDirectory(ftpClient));
+            addOption(7, new DownloadFile(ftpClient));
+            addOption(8, new CreateFolder(ftpClient));
+            addOption(9, new DeleteFolder(ftpClient));
+            addOption(8, new RenameFile(ftpClient));
 
 
         } else {
@@ -51,11 +51,11 @@ public class FtpClientMenu extends Menu {
         if (user.getActiveConfig() != null) {
             ftpClient = new FtpClient(user.getActiveConfig());
             if (!ftpClient.connect()) {
-                Log.getInstance().error("No se pudo conectar al servidor FTP con la configuración activa.");
+                Log.getInstance().error("No se puede conectar al servidor FTP.");
                 ftpClient = null;
             }
         } else {
-            Log.getInstance().error("No hay configuración FTP activa para este usuario.");
+            Log.getInstance().error("Se necesita una configuración FTP activa.");
         }
     }
 }

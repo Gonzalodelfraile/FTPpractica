@@ -6,7 +6,7 @@ import edu.ucam.utils.Log;
 
 public class ListFiles implements Option {
 
-    private FtpClient ftpClient;
+    private final FtpClient ftpClient;
 
     public ListFiles(FtpClient ftpClient) {
         this.ftpClient = ftpClient;
@@ -20,14 +20,11 @@ public class ListFiles implements Option {
         }
 
         try {
-            // Enviar comando PASV y obtener la respuesta
-            String pasvResponse = ftpClient.sendCommand("PASV");
-            Log.getInstance().debug("Respuesta PASV: " + pasvResponse);
 
-            // Leer el listado de archivos desde el canal de datos
-            String fileList = ftpClient.readDataFromPasv(pasvResponse, "LIST");
+            String fileList = ftpClient.listFiles("/");
             System.out.println("Archivos en el directorio raíz:");
             System.out.println(fileList);
+            
 
         } catch (Exception e) {
             Log.getInstance().error("Error al listar archivos: " + e.getMessage());

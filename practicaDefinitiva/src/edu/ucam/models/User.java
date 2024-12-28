@@ -8,8 +8,8 @@ import java.util.List;
 
 public class User implements Serializable {
 
-    private String name;
-    private String password;
+    private final String name;
+    private final String password;
     private boolean isAdmin;  // Cambio de role a booleano isAdmin
     private FtpConfig activeConfig;
     private List<FtpConfig> configs;
@@ -68,16 +68,8 @@ public class User implements Serializable {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public String getPassword() {
         return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     // Se cambió de getRole a isAdmin para reflejar el cambio a booleano
@@ -85,24 +77,8 @@ public class User implements Serializable {
         return isAdmin;
     }
 
-    public void setAdmin(boolean isAdmin) {
-        this.isAdmin = isAdmin;
-    }
-
     public FtpConfig getActiveConfig() {
         return activeConfig;
-    }
-
-    public void setActiveConfig(FtpConfig activeConfig) {
-        this.activeConfig = activeConfig;
-    }
-
-    public List<FtpConfig> getConfigs() {
-        return new ArrayList<>(configs); //devuelvo una copia de la lista
-    }
-
-    public void setConfigs(List<FtpConfig> configs) {
-        this.configs = configs;
     }
 
     public String listConfigs() {
@@ -125,6 +101,7 @@ public class User implements Serializable {
     public String toString() {
         return "User{" +
                 "name='" + name + '\'' +
+                ", password='" + password + '\'' +
                 ", isAdmin=" + isAdmin +  // Se imprime isAdmin en lugar de role
                 ", activeConfig=" + activeConfig +
                 ", configs=" + configs +
