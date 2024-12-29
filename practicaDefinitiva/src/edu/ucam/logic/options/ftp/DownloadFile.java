@@ -16,17 +16,14 @@ public class DownloadFile implements Option {
 
     @Override
     public void execute() {
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("Introduce el nombre del archivo a descargar: ");
-        String fileName = scanner.nextLine();
 
-        System.out.println("Introduce la ruta de destino: ");
-        String destinationPath = scanner.nextLine();
+        String fileName = view.getInput("Nombre del archivo a descargar: ");
+        String destinationPath = view.getInput("Ruta de destino: ");
 
         try {
             ftpClient.downloadFile( fileName, destinationPath);
         } catch (IOException e) {
-            Log.getInstance().error("Error al descargar archivo: " + e.getMessage());
+            view.displayError("Error al descargar archivo: " + e.getMessage());
         }
     }
 

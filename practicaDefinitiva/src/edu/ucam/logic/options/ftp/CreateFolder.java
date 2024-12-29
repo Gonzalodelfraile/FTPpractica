@@ -5,7 +5,6 @@ import edu.ucam.models.Option;
 import edu.ucam.utils.Log;
 
 import java.io.IOException;
-import java.util.Scanner;
 
 public class CreateFolder implements Option {
     private final FtpClient ftpClient;
@@ -16,9 +15,7 @@ public class CreateFolder implements Option {
 
     @Override
     public void execute() {
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("Nombre de la carpeta a crear: ");
-        String folderName = scanner.nextLine();
+        String folderName = view.getInput("Nombre de la carpeta a crear: ");
 
         try {
             ftpClient.createFolder(folderName);

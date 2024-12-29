@@ -16,16 +16,13 @@ public class RenameFile implements Option {
 
     @Override
     public void execute() {
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("Introduce el nombre del archivo a renombrar: ");
-        String oldName = scanner.nextLine();
-        System.out.println("Introduce el nuevo nombre del archivo: ");
-        String newName = scanner.nextLine();
+        String oldName = view.getInput("Nombre del archivo a renombrar: ");
+        String newName = view.getInput("Nuevo nombre: ");
 
         try {
             ftpClient.rename( oldName, newName);
         } catch (IOException e) {
-            Log.getInstance().error(e.getMessage());
+            view.displayError(e.getMessage());
         }
     }
 

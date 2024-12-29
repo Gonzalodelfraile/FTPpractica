@@ -17,17 +17,13 @@ public class UploadFile implements Option {
 
     @Override
     public void execute() {
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("Introduce la ruta del archivo a subir: ");
-        String filePath = scanner.nextLine();
-
-        System.out.println("Introduce el nombre: ");
-        String fileName = scanner.nextLine();
+        String filePath = view.getInput("Ruta del archivo a subir: ");
+        String fileName = view.getInput("Nombre del archivo a subir: ");
 
         try {
             ftpClient.uploadFile(filePath, fileName);
         } catch (IOException e) {
-            Log.getInstance().error("Error al subir archivo: " + e.getMessage());
+            view.displayError("Error al subir archivo: " + e.getMessage());
         }
 
     }

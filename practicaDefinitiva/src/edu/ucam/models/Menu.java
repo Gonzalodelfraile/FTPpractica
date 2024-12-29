@@ -1,5 +1,7 @@
 package edu.ucam.models;
 
+import edu.ucam.ui.View;
+import edu.ucam.ui.ViewFactory;
 import edu.ucam.utils.Log;
 
 import java.util.HashMap;
@@ -8,6 +10,7 @@ import java.util.Scanner;
 
 // Menú base
 public class Menu {
+    protected View view;
     protected Map<Integer, Option> options = new HashMap<>();
     protected Scanner scanner = new Scanner(System.in);
     private String title;
@@ -16,6 +19,7 @@ public class Menu {
 
     public Menu(String title) {
         this.title = title;
+        this.view = ViewFactory.getView();
     }
 
     // mostrar el menú
@@ -23,13 +27,14 @@ public class Menu {
         boolean menuDisplayed = true;
         while (isSessionActive && menuDisplayed) {
 
-            System.out.println("\n---" + title + "---");
-            options.forEach((key, option) -> System.out.println(key + ". " + option));
-            System.out.println("Seleccione una opción:");
-            int optionNumber = Integer.parseInt(scanner.nextLine());
-            menuDisplayed = executeOption(optionNumber);
-        }
 
+            try {
+                int optionNumber = view.displayMenu(title, options);
+                menuDisplayed = executeOption(optionNumber);
+            } catch (NumberFormatException e) {
+                view.displayError("Entrada no válida. Por favor, ingrese un número.");
+            }
+        }
     }
 
     // Registrar una opción
@@ -44,7 +49,7 @@ public class Menu {
             option.execute();
             return option.isMenuDisplayed();
         } else {
-            Log.getInstance().error("Opción no válida.");
+            view.displayError("Opción no válida. Por favor, seleccione una opción válida.");
             return true;
         }
     }

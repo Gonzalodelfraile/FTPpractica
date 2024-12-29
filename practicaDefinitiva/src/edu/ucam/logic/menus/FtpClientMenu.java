@@ -21,16 +21,16 @@ public class FtpClientMenu extends Menu {
         if (ftpClient != null) {
             addOption(3, new ListFiles(ftpClient));
             addOption(4, new UploadFile(ftpClient));
-            addOption(5, new showCurrentDirectory(ftpClient));
+            addOption(5, new ShowCurrentDirectory(ftpClient));
             addOption(6, new ChangeDirectory(ftpClient));
             addOption(7, new DownloadFile(ftpClient));
             addOption(8, new CreateFolder(ftpClient));
             addOption(9, new DeleteFolder(ftpClient));
-            addOption(8, new RenameFile(ftpClient));
+            addOption(10, new RenameFile(ftpClient));
 
 
         } else {
-            Log.getInstance().error("No se pudo iniciar el cliente FTP.");
+            view.displayError("No se pudo iniciar el cliente FTP.");
         }
 
     }
@@ -51,11 +51,11 @@ public class FtpClientMenu extends Menu {
         if (user.getActiveConfig() != null) {
             ftpClient = new FtpClient(user.getActiveConfig());
             if (!ftpClient.connect()) {
-                Log.getInstance().error("No se puede conectar al servidor FTP.");
+                view.displayError("No se puede conectar al servidor FTP.");
                 ftpClient = null;
             }
         } else {
-            Log.getInstance().error("Se necesita una configuración FTP activa.");
+            view.displayError("Se necesita una configuración FTP activa.");
         }
     }
 }

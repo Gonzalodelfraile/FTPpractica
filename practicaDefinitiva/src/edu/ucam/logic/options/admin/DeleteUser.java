@@ -3,6 +3,7 @@ package edu.ucam.logic.options.admin;
 import edu.ucam.logic.UserManager;
 import edu.ucam.models.Option;
 import edu.ucam.models.User;
+import edu.ucam.ui.ViewFactory;
 import edu.ucam.utils.Log;
 
 import java.util.Scanner;
@@ -22,9 +23,7 @@ public class DeleteUser implements Option {
     }
 
     private String userDataInput() {
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("Nombre del usuario a borrar: ");
-        return scanner.nextLine();
+        return view.getInput("Introduce el nombre del usuario a borrar: ");
     }
 
     @Override

@@ -1,5 +1,6 @@
 package edu.ucam.logic.options.settings;
 
+import edu.ucam.logic.ftp.FtpClient;
 import edu.ucam.models.FtpConfig;
 import edu.ucam.models.Option;
 import edu.ucam.models.User;
@@ -49,61 +50,18 @@ public class NewSetting implements Option {
     }
 
     private boolean testFtpConnection(FtpConfig config) {
-        try (Socket socket = new Socket(config.getServerIP(), config.getPort())) {
-            BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            PrintWriter writer = new PrintWriter(socket.getOutputStream(), true);
-
-            // Leer respuesta inicial del servidor
-            String response = readFtpResponse(reader);
-            Log.getInstance().debug("Respuesta inicial del servidor: " + response);
-
-            // Enviar comando USER
-            writer.println("USER " + config.getUser());
-            response = readFtpResponse(reader);
-            Log.getInstance().debug("Respuesta al comando USER: " + response);
-
-            // Validar si el servidor pide la contraseña
-            if (!response.startsWith("331")) {
-                Log.getInstance().error("Error de conexión: Usuario no aceptado.");
-                return false;
-            }
-
-            // Enviar comando PASS
-            writer.println("PASS " + config.getPassword());
-            response = readFtpResponse(reader);
-            Log.getInstance().debug("Respuesta al comando PASS: " + response);
-
-            // Validar autenticación
-            if (!response.startsWith("230")) {
-                Log.getInstance().error("Error de conexión: Contraseña incorrecta o autenticación fallida.");
-                return false;
-            }
-
-            Log.getInstance().info("Autenticación al servidor FTP exitosa.");
+        FtpClient ftpClient = new FtpClient(config);
+        if (ftpClient.connect()) {
+            Log.getInstance().info("Conexión exitosa.");
+            ftpClient.disconnect();
             return true;
-        } catch (Exception e) {
-            Log.getInstance().error("Error de conexión. Configuración no válida: " + e.getMessage());
+        } else {
+            Log.getInstance().error("Error al conectar.");
+            ftpClient.disconnect();
             return false;
         }
+
     }
-
-    //leer respuestas completas del servidor (manejo de múltiples líneas)
-    private String readFtpResponse(BufferedReader reader) throws IOException {
-        StringBuilder fullResponse = new StringBuilder();
-        String line;
-
-        while ((line = reader.readLine()) != null) {
-            fullResponse.append(line).append("\n");
-            // Si la línea no comienza con un código numérico seguido de un guión, es la última línea
-            if (line.matches("^\\d{3} .*")) {
-                break;
-            }
-        }
-
-        return fullResponse.toString().trim();
-    }
-
-
 
     @Override
     public boolean isMenuDisplayed() {

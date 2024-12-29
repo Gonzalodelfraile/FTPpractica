@@ -5,7 +5,6 @@ import edu.ucam.models.Option;
 import edu.ucam.utils.Log;
 
 import java.io.IOException;
-import java.util.Scanner;
 
 public class ChangeDirectory implements Option {
     private final FtpClient ftpClient;
@@ -16,16 +15,12 @@ public class ChangeDirectory implements Option {
 
     @Override
     public void execute() {
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("Introduce el directorio al que quieres cambiar:");
-        String directory = scanner.nextLine();
+        String directory = view.getInput("Introduce el directorio al que quieres cambiar:");
 
         try {
             ftpClient.changeDirectory(directory);
-            Log.getInstance().info("Directorio cambiado a " + directory);
-
         } catch (IOException e) {
-            Log.getInstance().error(e.getMessage());
+            view.displayError( e.getMessage());
         }
     }
 

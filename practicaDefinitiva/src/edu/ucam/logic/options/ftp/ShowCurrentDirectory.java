@@ -6,9 +6,9 @@ import edu.ucam.utils.Log;
 
 import java.io.IOException;
 
-public class showCurrentDirectory implements Option {
+public class ShowCurrentDirectory implements Option {
     private final FtpClient ftpClient;
-    public showCurrentDirectory(FtpClient ftpClient) {
+    public ShowCurrentDirectory(FtpClient ftpClient) {
         this.ftpClient = ftpClient;
     }
 
@@ -17,9 +17,9 @@ public class showCurrentDirectory implements Option {
         Log.getInstance().debug("Mostrando directorio actual...");
         try {
             String currentDirectory = ftpClient.getCurrentDirectory();
-            System.out.println("Directorio actual: " + currentDirectory);
+            view.display("Directorio actual: " + currentDirectory);
         } catch (IOException e) {
-            Log.getInstance().error("Error al mostrar el directorio actual: " + e.getMessage());
+            view.displayError("Error al mostrar el directorio actual: " + e.getMessage());
         }
     }
 

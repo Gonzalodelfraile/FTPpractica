@@ -14,20 +14,12 @@ public class ListFiles implements Option {
 
     @Override
     public void execute() {
-        if (ftpClient == null) {
-            Log.getInstance().error("No hay una conexión FTP activa.");
-            return;
-        }
-
         try {
-
             String fileList = ftpClient.listFiles("/");
-            System.out.println("Archivos en el directorio raíz:");
-            System.out.println(fileList);
-            
-
+            view.display("Archivos en el directorio raíz:");
+            view.display(fileList);
         } catch (Exception e) {
-            Log.getInstance().error("Error al listar archivos: " + e.getMessage());
+            view.displayError("Error al listar archivos: " + e.getMessage());
         }
     }
 

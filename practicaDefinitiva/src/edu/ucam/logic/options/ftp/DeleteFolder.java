@@ -15,14 +15,12 @@ public class DeleteFolder implements Option {
 
     @Override
     public void execute() {
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("Nombre de la carpeta a borrar: ");
-        String folderName = scanner.nextLine();
+        String folderName = view.getInput("Nombre de la carpeta a borrar: ");
 
         try {
             ftpClient.deleteFolder( folderName );
         } catch (IOException e) {
-            Log.getInstance().error(e.getMessage());
+            view.displayError( e.getMessage());
         }
     }
 

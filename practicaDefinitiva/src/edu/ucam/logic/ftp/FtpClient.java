@@ -1,6 +1,8 @@
 package edu.ucam.logic.ftp;
 
 import edu.ucam.models.FtpConfig;
+import edu.ucam.ui.View;
+import edu.ucam.ui.ViewFactory;
 import edu.ucam.utils.Log;
 
 import java.io.*;
@@ -8,11 +10,18 @@ import java.net.Socket;
 
 public class FtpClient {
 
-    private static final String RESPONSE_USER_OK = "331";
-    private static final String RESPONSE_AUTH_SUCCESS = "230";
-    private static final String RESPONSE_READY_FOR_TRANSFER = "150";
-    private static final String RESPONSE_TRANSFER_COMPLETE = "226";
+    private static final String RESPONSE_USER_OK = "331"; // Usuario correcto
+    private static final String RESPONSE_AUTH_SUCCESS = "230"; // Autenticación correcta
+    private static final String RESPONSE_READY_FOR_TRANSFER = "150"; // Listo para la transferencia
+    private static final String RESPONSE_TRANSFER_COMPLETE = "226"; // Transferencia completada
+    private static final String RESPONSE_INITIAL_OK = "220"; // Servicio listo
+    private static final String RESPONSE_DIRECTORY_CHANGED = "250"; // Directorio cambiado correctamente
+    private static final String RESPONSE_DIRECTORY_CREATED = "257"; // Directorio creado correctamente
+    private static final String RESPONSE_RENAME_READY = "350"; // Listo para renombrar
 
+    private static final int BUFFER_SIZE = 4096; // Tamaño del buffer para transferencia de datos
+
+    private final View view;
     private final FtpConfig config;
     private Socket controlSocket;
     private BufferedReader reader;
@@ -22,7 +31,9 @@ public class FtpClient {
         if (config == null) {
             throw new IllegalArgumentException("La configuración FTP no puede ser nula.");
         }
+
         this.config = config;
+        this.view = ViewFactory.getView();
     }
 
     public boolean connect() {
@@ -35,10 +46,10 @@ public class FtpClient {
                 return false;
             }
 
-            Log.getInstance().info("Conexión exitosa al servidor FTP.");
+            view.display("Conexión establecida");
             return true;
         } catch (IOException e) {
-            Log.getInstance().error("Error al conectar: " + e.getMessage());
+            view.displayError("Error al conectar: " + e.getMessage());
             return false;
         }
     }
@@ -48,10 +59,10 @@ public class FtpClient {
             if (controlSocket != null && !controlSocket.isClosed()) {
                 sendCommand("QUIT");
                 controlSocket.close();
-                Log.getInstance().info("Desconectado del servidor FTP.");
+                view.display("Desconectado del servidor FTP.");
             }
         } catch (IOException e) {
-            Log.getInstance().error("Error al desconectar: " + e.getMessage());
+            view.displayError("Error al desconectar: " + e.getMessage());
         }
     }
 
@@ -65,7 +76,7 @@ public class FtpClient {
         String line;
         while ((line = reader.readLine()) != null) {
             response.append(line).append("\n");
-            if (line.matches("^\\d{3} .*")) {
+            if (line.matches("^\\d{3} .*$")) {
                 break;
             }
         }
@@ -73,7 +84,6 @@ public class FtpClient {
     }
 
     public void uploadFile(String localPath, String fileName) throws IOException {
-
 
         File file = validateFile(localPath);
 
@@ -84,12 +94,11 @@ public class FtpClient {
             Log.getInstance().debug("Subiendo archivo: " + localPath + " a " + fileName);
             transferData(fileIn, dataOut);
             confirmTransferComplete();
-            Log.getInstance().info("Archivo subido como: " + fileName);
+            view.display("Archivo subido como: " + fileName);
         }
     }
 
     public void downloadFile(String fileName, String localPath) throws IOException {
-        // Validar que el archivo remoto y el destino local son válidos
         File localFile = new File(localPath, fileName);
         if (localFile.isDirectory()) {
             throw new IOException("La ruta local no puede ser un directorio: " + localPath);
@@ -103,20 +112,11 @@ public class FtpClient {
              FileOutputStream fileOut = new FileOutputStream(localFile)) {
 
             Log.getInstance().debug("Descargando archivo: " + fileName + " a " + localPath);
-
-            // Transferir datos del canal de datos al archivo local
             transferData(dataIn, fileOut);
-
-            // Confirmar que la transferencia fue completada
             confirmTransferComplete();
-            Log.getInstance().info("Archivo descargado correctamente a: " + localPath);
-
-        } catch (IOException e) {
-            Log.getInstance().error("Error al descargar archivo: " + e.getMessage());
-            throw e; // Re-lanzar para permitir el manejo en niveles superiores
+            view.display("Archivo descargado correctamente a: " + localPath);
         }
     }
-
 
     private void initializeStreams() throws IOException {
         reader = new BufferedReader(new InputStreamReader(controlSocket.getInputStream()));
@@ -126,7 +126,7 @@ public class FtpClient {
     private boolean validateInitialResponse() throws IOException {
         String response = readControlResponse();
         Log.getInstance().debug("Respuesta inicial: " + response);
-        return response.startsWith("220"); // 220: Service ready
+        return response.startsWith(RESPONSE_INITIAL_OK);
     }
 
     private boolean authenticate() throws IOException {
@@ -153,17 +153,17 @@ public class FtpClient {
 
     private void transferData(InputStream in, OutputStream out) throws IOException {
         Log.getInstance().debug("Transfiriendo datos...");
-        byte[] buffer = new byte[4096]; // Tamaño típico del buffer
+        byte[] buffer = new byte[BUFFER_SIZE];
         int bytesRead;
 
         try {
-            while ((bytesRead = in.read(buffer)) != -1) { // Lee hasta que no haya más datos
-                out.write(buffer, 0, bytesRead); // Escribe los datos leídos
+            while ((bytesRead = in.read(buffer)) != -1) {
+                out.write(buffer, 0, bytesRead);
             }
-            out.flush(); // confirma que todos los datos se han escrito
-            Log.getInstance().info("Transferencia de datos completada.");
+            out.flush();
+            view.display("Transferencia completada");
         } catch (IOException e) {
-            Log.getInstance().error("Error durante la transferencia de datos: " + e.getMessage());
+            view.displayError("Error al transferir datos: " + e.getMessage());
             throw e;
         } finally {
             try {
@@ -172,13 +172,12 @@ public class FtpClient {
                 Log.getInstance().warning("No se pudo cerrar el InputStream: " + e.getMessage());
             }
             try {
-                out.close(); // Asegúrate de cerrar el OutputStream
+                out.close();
             } catch (IOException e) {
                 Log.getInstance().warning("No se pudo cerrar el OutputStream: " + e.getMessage());
             }
         }
     }
-
 
     private void confirmTransferComplete() throws IOException {
         String response = readControlResponse();
@@ -224,18 +223,19 @@ public class FtpClient {
         String command = "CWD " + path;
         String response = sendCommand(command);
 
-        if (!response.startsWith("250")) {
+        if (!response.startsWith(RESPONSE_DIRECTORY_CHANGED)) {
             throw new IOException("Error al cambiar de directorio: " + response);
         }
+
+        view.display("Directorio cambiado a: " + path);
     }
 
     public String getCurrentDirectory() throws IOException {
         String response = sendCommand("PWD");
-        if (response.startsWith("257")) {
+        if (response.startsWith(RESPONSE_DIRECTORY_CREATED)) {
             return response;
-            //return response.substring(4,response.indexOf('"')); // Eliminar el código de respuesta ("257 ")
         } else {
-            throw new IOException("Error al obtener el directorio actual: " + response);
+            throw new IOException(response);
         }
     }
 
@@ -245,8 +245,8 @@ public class FtpClient {
         }
 
         String response = sendCommand("MKD " + directoryName);
-        if (response.startsWith("257")) { // Respuesta esperada: 257 "directorio creado"
-            Log.getInstance().info("Directorio creado: " + directoryName);
+        if (response.startsWith(RESPONSE_DIRECTORY_CREATED)) {
+            view.display("Directorio creado: " + directoryName);
         } else {
             throw new IOException("Error al crear el directorio: " + response);
         }
@@ -258,8 +258,8 @@ public class FtpClient {
         }
 
         String response = sendCommand("RMD " + directoryName);
-        if (response.startsWith("250")) { // Respuesta esperada: 250 "directorio eliminado"
-            Log.getInstance().info("Directorio eliminado: " + directoryName);
+        if (response.startsWith(RESPONSE_DIRECTORY_CHANGED)) {
+            view.display("Directorio eliminado: " + directoryName);
         } else {
             throw new IOException("Error al eliminar el directorio: " + response);
         }
@@ -273,20 +273,15 @@ public class FtpClient {
             throw new IllegalArgumentException("El nuevo nombre no puede estar vacío.");
         }
 
-        // Enviar comando RNFR (Rename From)
         String response = sendCommand("RNFR " + oldName);
-        if (!response.startsWith("350")) { // Respuesta esperada: 350 "File or directory exists, ready to rename"
+        if (!response.startsWith(RESPONSE_RENAME_READY)) {
             throw new IOException("Error al iniciar el renombrado: " + response);
         }
 
-        // Enviar comando RNTO (Rename To)
         response = sendCommand("RNTO " + newName);
-        if (!response.startsWith("250")) { // Respuesta esperada: 250 "Rename successful"
+        if (!response.startsWith(RESPONSE_DIRECTORY_CHANGED)) {
             throw new IOException("Error al renombrar: " + response);
         }
-
-        Log.getInstance().info("Renombrado: " + oldName + " a " + newName);
+        view.display("Renombrado: " + oldName + " a " + newName);
     }
-
-
 }
