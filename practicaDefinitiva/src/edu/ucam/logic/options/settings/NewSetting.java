@@ -24,43 +24,14 @@ public class NewSetting implements Option {
     @Override
     public void execute() {
         Log.getInstance().debug("Creando nueva configuración...");
-        FtpConfig ftpConfig = ftpDataInput();
+        FtpConfig ftpConfig = view.getFtpData();
 
-        if (testFtpConnection(ftpConfig)) {
-            Log.getInstance().info("Se ha establecido la conexión.");
-            // TODO la configuración a la lista del usuario
+        if((new FtpClient(ftpConfig)).testConnection()) {
             user.addConfig(ftpConfig);
+            view.display("Configuración añadida correctamente");
         } else {
-            Log.getInstance().error("Error de conexión.");
+            view.displayError("No se ha podido conectar con el servidor FTP");
         }
-    }
-
-    private FtpConfig ftpDataInput() {
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("Introduce el nombre de la configuración: ");
-        String name = scanner.nextLine();
-        System.out.println("Introduce el host: ");
-        String host = scanner.nextLine();
-        System.out.println("Introduce el usuario: ");
-        String user = scanner.nextLine();
-        System.out.println("Introduce la contraseña: ");
-        String password = scanner.nextLine();
-
-        return new FtpConfig(name, host, user, password);
-    }
-
-    private boolean testFtpConnection(FtpConfig config) {
-        FtpClient ftpClient = new FtpClient(config);
-        if (ftpClient.connect()) {
-            Log.getInstance().info("Conexión exitosa.");
-            ftpClient.disconnect();
-            return true;
-        } else {
-            Log.getInstance().error("Error al conectar.");
-            ftpClient.disconnect();
-            return false;
-        }
-
     }
 
     @Override

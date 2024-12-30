@@ -1,5 +1,6 @@
 package edu.ucam.ui;
 
+import edu.ucam.models.FtpConfig;
 import edu.ucam.models.Option;
 import edu.ucam.models.User;
 
@@ -12,6 +13,7 @@ public interface View {
     int displayMenu(String title, Map<Integer, Option> options);
 
     User getUserData();
+    FtpConfig getFtpData();
     String getInput(String message);
 
     void update();

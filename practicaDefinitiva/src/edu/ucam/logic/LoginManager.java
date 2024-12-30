@@ -5,6 +5,7 @@ import edu.ucam.models.User;
 import edu.ucam.models.Menu;
 import edu.ucam.logic.menus.AdminMenu;
 import edu.ucam.ui.LoginUI;
+import edu.ucam.ui.ViewFactory;
 import edu.ucam.utils.Log;
 
 import java.util.Scanner;
@@ -21,9 +22,7 @@ public class LoginManager {
     }
 
     private static boolean logAgain() {
-        System.out.println("¿Desea volver a iniciar sesión? (si/no)");
-        Scanner scanner = new Scanner(System.in);
-        String response = scanner.nextLine();
+        String response = ViewFactory.getView().getInput("¿Desea volver a iniciar sesión? (si/no)");
         return response.equalsIgnoreCase("si");
 
     }

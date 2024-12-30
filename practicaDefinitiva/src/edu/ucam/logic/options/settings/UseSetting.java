@@ -16,7 +16,7 @@ public class UseSetting implements Option {
     @Override
     public void execute() {
         Log.getInstance().debug("Seleccion de configuración...");
-        String name = ftpDataInput();
+        String name = view.getInput("Nombre de la configuración: ");
         user.setActiveConfig(name);
 
     }
@@ -29,10 +29,5 @@ public class UseSetting implements Option {
     @Override
     public String toString() {
         return "Seleccionar configuración";
-    }
-    private String ftpDataInput() {
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("Nombre de la configuración: ");
-        return scanner.nextLine();
     }
 }

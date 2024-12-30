@@ -17,15 +17,9 @@ public class RemoveSetting implements Option {
     @Override
     public void execute() {
         Log.getInstance().debug("Eliminando configuración...");
-        String name = ftpDataInput();
+        String name = view.getInput("Nombre de la configuración a eliminar: ");
 
         user.removeConfig(name);
-    }
-
-    private String ftpDataInput() {
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("Nombre de la configuración a eliminar: ");
-        return scanner.nextLine();
     }
 
     @Override

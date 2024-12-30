@@ -1,5 +1,6 @@
 package edu.ucam.logic.persistance;
 
+import edu.ucam.ui.ViewFactory;
 import edu.ucam.utils.Log;
 
 import java.io.*;
@@ -14,9 +15,9 @@ public class FileManager {
     public static void save(String path, Object content) {
         try(ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(path))) {
             oos.writeObject(content);
-            Log.getInstance().info("Objeto guardado correctamente en: " + path);
+            ViewFactory.getView().display("Objeto guardado correctamente en: " + path);
         } catch (IOException e) {
-            Log.getInstance().error("Error al guardar el objeto en: " + path, e);
+            ViewFactory.getView().displayError("Error al guardar el objeto en: " + path);
         }
     }
 
@@ -27,10 +28,10 @@ public class FileManager {
      */
     public static Object load(String path) {
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(path))) {
-            Log.getInstance().info("Objeto cargado correctamente desde: " + path);
+            ViewFactory.getView().display("Cargando objeto desde: " + path);
             return ois.readObject();
         } catch (IOException | ClassNotFoundException e) {
-            Log.getInstance().error("Error al cargar el objeto desde: " + path, e);
+            ViewFactory.getView().displayError("Error al cargar el objeto desde: " + path);
             return null;
         }
     }

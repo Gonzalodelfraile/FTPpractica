@@ -1,5 +1,7 @@
 package edu.ucam.models;
 
+import edu.ucam.ui.View;
+import edu.ucam.ui.ViewFactory;
 import edu.ucam.utils.Log;
 
 import java.io.Serializable;
@@ -40,27 +42,27 @@ public class User implements Serializable {
             Log.getInstance().info("Añadiendo configuración: " + config + " al usuario " + name);
             configs.add(config);
         } else {
-            Log.getInstance().error("La configuración " + config.getName() + " ya existe para el usuario " + name);
+            ViewFactory.getView().displayError("La configuración " + config.getName() + " ya existe para el usuario " + name);
         }
     }
 
     public void removeConfig(String name) {
         FtpConfig config = searchConfig(name);
         if (config != null) {
-            Log.getInstance().info("Eliminando configuración: " + config + " del usuario " + name);
+            ViewFactory.getView().display("Eliminando configuración: " + config + " del usuario " + name);
             configs.remove(config);
         } else {
-            Log.getInstance().error("La configuración " + name + " no existe para el usuario " + name);
+            ViewFactory.getView().displayError("La configuración " + name + " no existe para el usuario " + this.name);
         }
     }
 
     public void setActiveConfig(String name) {
         FtpConfig config = searchConfig(name);
         if (config != null) {
-            Log.getInstance().info("Configuración activa para el usuario " + this.name + ": " + config);
+            ViewFactory.getView().display("Configuración activa: " + config + " para el usuario " + this.name);
             activeConfig = config;
         } else {
-            Log.getInstance().error("La configuración " + name + " no existe para el usuario " + this.name);
+            ViewFactory.getView().displayError("La configuración " + name + " no existe para el usuario " + this.name);
         }
     }
 

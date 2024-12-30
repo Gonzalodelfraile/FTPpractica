@@ -1,5 +1,6 @@
 package edu.ucam.ui;
 
+import edu.ucam.models.FtpConfig;
 import edu.ucam.models.Option;
 import edu.ucam.models.User;
 import edu.ucam.utils.Log;
@@ -57,6 +58,19 @@ public class ConsoleView implements View {
         String role = scanner.nextLine();
         boolean isAdmin = role.equalsIgnoreCase("si");
         return new User(name, password, isAdmin);
+    }
+
+    @Override
+    public FtpConfig    getFtpData() {
+        System.out.println("Introduce el nombre de la configuración: ");
+        String name = scanner.nextLine();
+        System.out.println("Introduce el host: ");
+        String host = scanner.nextLine();
+        System.out.println("Introduce el usuario: ");
+        String user = scanner.nextLine();
+        System.out.println("Introduce la contraseña: ");
+        String password = scanner.nextLine();
+        return new FtpConfig(name, host, user, password);
     }
 
     @Override

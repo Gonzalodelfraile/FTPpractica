@@ -2,6 +2,7 @@ package edu.ucam.logic;
 
 import edu.ucam.logic.persistance.FileManager;
 import edu.ucam.models.User;
+import edu.ucam.ui.ViewFactory;
 import edu.ucam.utils.Log;
 
 import java.util.HashMap;
@@ -19,7 +20,7 @@ public class UserManager {
         loadUsers();
 
         if(users == null) {
-            Log.getInstance().error("No se han podido cargar los usuarios.Creando usuarios por defecto...");
+            ViewFactory.getView().displayError("No se han podido cargar los usuarios.Creando usuarios por defecto...");
             // Crear usuarios por defecto
             users = new HashMap<>();
             addUser(new User("admin", "admin", true));
@@ -38,30 +39,30 @@ public class UserManager {
     public void addUser(User user) {
         Log.getInstance().debug("Añadiendo usuario: " + user + "...");
         if(searchUser(user.getName()) != null) {
-            Log.getInstance().error("El usuario " + user.getName() + " ya existe.");
+            ViewFactory.getView().displayError("El usuario " + user.getName() + " ya existe.");
             return;
         } else if (user.getName().isEmpty() || user.getPassword().isEmpty()) {
-            Log.getInstance().error("El usuario no puede tener campos vacíos.");
+            ViewFactory.getView().displayError("Datos incorrectos.");
             return;
         }
         users.put(user.getName(), user);
-        Log.getInstance().info("Usuario añadido correctamente: " + user);
+        ViewFactory.getView().display("Usuario añadido: " + user);
         saveUsers();
     }
 
     public void removeUser(String name, User activeUser) {
         Log.getInstance().debug("Eliminando usuario: " + name + "...");
         if (activeUser.getName().equals(name)) {
-            Log.getInstance().error("No puedes eliminarte a ti mismo.");
+            ViewFactory.getView().displayError("No puedes eliminarte a ti mismo.");
             return;
         }
         User user = searchUser(name);
         if(user != null) {
             users.remove(name);
-            Log.getInstance().info("Usuario eliminado correctamente: " + user);
+            ViewFactory.getView().display("Usuario eliminado: " + name);
             saveUsers();
         } else {
-            Log.getInstance().error("El usuario " + name + " no existe.");
+            ViewFactory.getView().displayError("El usuario " + name + " no existe.");
         }
     }
 
@@ -91,12 +92,12 @@ public class UserManager {
         Log.getInstance().debug("Iniciando sesión...");
         User tempUser = searchUser(name);
         if(tempUser != null && tempUser.getPassword().equals(password)) {
-            Log.getInstance().info("Usuario autenticado: " + tempUser);
+            ViewFactory.getView().display("Bienvenido " + name);
             return tempUser;
         } else if (tempUser == null) {
-            Log.getInstance().error("Usuario no encontrado: " + name);
+            ViewFactory.getView().displayError("Usuario no encontrado: " + name);
         } else {
-            Log.getInstance().error("Contraseña incorrecta para el usuario: " + name);
+            ViewFactory.getView().displayError("Contraseña incorrecta.");
         }
         return null;
     }

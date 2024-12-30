@@ -284,4 +284,12 @@ public class FtpClient {
         }
         view.display("Renombrado: " + oldName + " a " + newName);
     }
+
+    public boolean testConnection() {
+        if (connect()) {
+            disconnect();
+            return true;
+        }
+        return false;
+    }
 }

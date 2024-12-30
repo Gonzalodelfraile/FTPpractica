@@ -13,7 +13,7 @@ public class ListSettings implements Option {
     @Override
     public void execute() {
         Log.getInstance().debug("Listando configuraciones...");
-        System.out.println(user.listConfigs());
+        view.display(user.listConfigs());
 
     }
 
@@ -24,7 +24,6 @@ public class ListSettings implements Option {
 
     @Override
     public String toString() {
-        // TODO Auto-generated method stub
         return "Listar configuraciones";
     }
 }
